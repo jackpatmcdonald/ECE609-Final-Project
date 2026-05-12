@@ -1,0 +1,33 @@
+*****need to make scripts runable
+chmod +x scripts/astar_planner.py
+chmod +x scripts/path_controller.py
+
+
+---------------------IP ADDRESSES-----------------------
+Computer)
+Master = <computer ip>
+Host = <computer ip>
+
+Robot) 
+Master = <computer ip>
+Host = <Robot IP>
+
+
+-----------------Creating the map----------------------
+Terminal 1 - roscore
+Terminal 2 - ssh ubuntu, roslaunch turtlebot3_bringup turtlebot3_robot.launch
+Terminal 3 - export TURTLEBOT3_MODEL=waffle, roslaunch turtlebot3_slam turtlebot3_slam.launch
+Terminal 4 - export TURTLEBOT3_MODEL=waffle, roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch --> drive robot around map
+Terminal 5 - rosrun map_server map_saver -f ~/map* 
+Double check map is saved
+
+
+-----------------How to launch scripts-------------------
+Checklist)
+robot bringup (ssh)
+roscore
+catkin_make
+
+*Make sure they are executable
+1) export TURTLEBOT3_MODEL=waffle
+2) roslaunch lab2 lab2.launch

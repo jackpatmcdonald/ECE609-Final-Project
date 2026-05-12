@@ -1,0 +1,44 @@
+<launch>
+
+  <!-- ── TurtleBot3 description (needed for robot model in RViz) ── -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro"/>
+
+  <node name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        output="screen"/>
+
+  <!-- ── Map Server ───────────────────────────────────────────── -->
+  <node name="map_server"
+        pkg="map_server"
+        type="map_server"
+        args="$(find lab2)/maps/task2map.yaml"
+        output="screen"/>
+
+  <!-- ── Static TF: map → odom (temporary until AMCL is running) ── -->
+  <node name="static_tf_map_odom"
+        pkg="tf"
+        type="static_transform_publisher"
+        args="0 0 0 0 0 0 map odom 100"/>
+
+  <!-- ── A* Planner Node ──────────────────────────────────────── -->
+  <node name="astar_planner"
+        pkg="lab2"
+        type="astar_planner.py"
+        output="screen"/>
+
+  <!-- ── Path Controller Node ─────────────────────────────────── -->
+  <node name="path_controller"
+        pkg="lab2"
+        type="path_controller.py"
+        output="screen"/>
+
+  <!-- ── RViz ─────────────────────────────────────────────────── -->
+  <node name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find lab2)/rviz/rviz_configuration.rviz"
+        output="screen"/>
+
+</launch>
