@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Load controller config onto parameter server -->
+  <rosparam file="$(find me571_lab3)/config/lab3_controllers.yaml"
+            command="load"/>
+
+  <!-- Start the controller manager -->
+  <node name="controller_manager"
+        pkg="controller_manager"
+        type="controller_manager"
+        respawn="false"
+        output="screen"
+        args="spawn
+              joint_state_controller
+              arm_controller
+              gripper_controller"/>
+
+</launch>

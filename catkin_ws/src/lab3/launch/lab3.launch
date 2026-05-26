@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Args -->
+  <arg name="use_sim" default="false"/>
+  <arg name="pipeline" default="ompl"/>
+  <arg name="rviz_config" default="$(find me571_lab3)/config/lab3.rviz"/>
+
+  <!-- Robot description-->
+  <param name="robot_description"
+         command="$(find xacro)/xacro
+                  $(find open_manipulator_description)/urdf/open_manipulator.urdf.xacro"/>
+
+  <!-- Joint State Publisher - /joint_states -->
+  <node unless="$(arg use_sim)"
+        name="joint_state_publisher"
+        pkg="joint_state_publisher"
+        type="joint_state_publisher">
+    <param name="rate" value="50"/>
+  </node>
+
+  <node if="$(arg use_sim)"
+        name="joint_state_publisher"
+        pkg="joint_state_publisher_gui"
+        type="joint_state_publisher_gui"/>
+
+  <!-- robot state publisher-->
+  <node name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher">
+    <param name="publish_frequency" value="50"/>
+  </node>
+
+  <!-- ros controller -->
+  <include file="$(find me571_lab3)/launch/controllers.launch"/>
+
+  <!-- Moveit-->
+  <include file="$(find open_manipulator_moveit_config)/launch/move_group.launch">
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution"             value="$(arg use_sim)"/>
+    <arg name="pipeline"                   value="$(arg pipeline)"/>
+    <arg name="info"                       value="true"/>
+  </include>
+
+  <!-- Rviz -->
+  <node name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(arg rviz_config)"
+        required="true"/>
+
+</launch>
