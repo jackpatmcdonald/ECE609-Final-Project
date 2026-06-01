@@ -1,0 +1,49 @@
+<!-- baseline.launch
+     Identical to potential_field.launch but uses the wait-and-resume planner.
+-->
+<launch>
+  <arg name="goal_x"          default="10.0"/>
+  <arg name="goal_y"          default="0.0"/>
+  <arg name="density"         default="medium"/>
+  <arg name="obstacle_speed"  default="0.3"/>
+  <arg name="trial"           default="0"/>
+
+  <env name="TURTLEBOT3_MODEL" value="waffle_pi"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name"   value="$(find obstacle_avoidance)/worlds/warehouse.world"/>
+    <arg name="paused"       value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui"          value="true"/>
+  </include>
+
+  <include file="$(find turtlebot3_gazebo)/launch/put_robot_in_world.launch">
+    <arg name="x_pos" value="0.0"/>
+    <arg name="y_pos" value="0.0"/>
+    <arg name="z_pos" value="0.0"/>
+  </include>
+
+  <node pkg="obstacle_avoidance" type="obstacle_spawner.py" name="obstacle_spawner" output="screen">
+    <param name="density"        value="$(arg density)"/>
+    <param name="obstacle_speed" value="$(arg obstacle_speed)"/>
+  </node>
+
+  <node pkg="obstacle_avoidance" type="obstacle_sensor.py" name="obstacle_sensor" output="screen"/>
+
+  <node pkg="obstacle_avoidance" type="baseline_planner.py" name="planner" output="screen">
+    <param name="goal_x" value="$(arg goal_x)"/>
+    <param name="goal_y" value="$(arg goal_y)"/>
+    <!-- shelf waypoints: N2 rack (2.5, 2.8) then S2 rack (2.5, -2.8) -->
+    <rosparam param="waypoints">[2.5, 2.8, 2.5, -2.8]</rosparam>
+  </node>
+
+  <node pkg="obstacle_avoidance" type="metrics_recorder.py" name="metrics_recorder" output="screen">
+    <param name="strategy" value="baseline"/>
+    <param name="density"  value="$(arg density)"/>
+    <param name="trial"    value="$(arg trial)"/>
+  </node>
+
+  <node pkg="rviz" type="rviz" name="rviz"
+        args="-d $(find obstacle_avoidance)/config/rviz_config.rviz"
+        required="false"/>
+</launch>

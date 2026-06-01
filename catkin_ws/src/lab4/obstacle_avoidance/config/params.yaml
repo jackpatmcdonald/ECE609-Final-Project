@@ -1,0 +1,29 @@
+# params.yaml — centralised tuning file for obstacle_avoidance package
+# Override any value here; launch files also accept CLI args.
+
+# ── Goal ──────────────────────────────────────────────────────────────────
+goal_x: 3.0
+goal_y: 0.0
+
+# ── Obstacle spawner ──────────────────────────────────────────────────────
+density: medium           # low | medium | high
+obstacle_speed: 0.3       # peak oscillation speed (m/s)
+
+# ── Obstacle sensor ───────────────────────────────────────────────────────
+cluster_dist_thresh: 0.3  # max gap between scan points in same cluster (m)
+min_cluster_size: 3       # minimum scan points to form a valid cluster
+max_range: 3.5            # ignore laser readings beyond this (m)
+velocity_alpha: 0.4       # low-pass filter blend for velocity estimates
+
+# ── Potential field planner ───────────────────────────────────────────────
+k_att: 0.8                # attractive gain (goal)
+k_rep: 1.2                # repulsive gain (obstacles)
+d0: 0.8                   # obstacle influence radius (m)
+max_lin_vel: 0.22         # TurtleBot3 Waffle Pi limit (m/s)
+max_ang_vel: 2.84         # TurtleBot3 Waffle Pi limit (rad/s)
+stuck_timeout: 3.0        # seconds before declaring robot stuck
+stuck_dist: 0.05          # minimum movement to reset stuck timer (m)
+
+# ── Baseline planner ──────────────────────────────────────────────────────
+clearance_radius: 0.5     # stop if obstacle enters this zone (m)
+linear_speed: 0.15        # baseline drive speed (m/s)

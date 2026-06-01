@@ -1,0 +1,7 @@
+cd ~/catkin_ws && catkin_make && source devel/setup.bash
+
+# Replanning strategy, medium density
+roslaunch obstacle_avoidance potential_field.launch density:=medium trial:=0
+
+# Baseline, same conditions
+roslaunch obstacle_avoidance baseline.launch density:=medium trial:=0
